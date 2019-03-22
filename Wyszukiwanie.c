@@ -49,14 +49,13 @@ int wyszukaj(int dlugosc, int X)
 	printf("]\n");
 
 	do{
-            C = (A+B)/2;
+        C = (A+B)/2;
 
-			if (X > D[C]){
-				B = C;
-			}
-			else if (X < D[C]){
-				A = C;
-			}
-		}while(D[C]!= X);
+        if (X > D[C])
+            B = C;
+        else if (X < D[C])
+            A = C;
+    }while(D[C]!= X);
+
 	return C;
 }
