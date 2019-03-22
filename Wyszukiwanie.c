@@ -32,19 +32,25 @@ int wyszukaj(int dlugosc, int X)
 	int C,A = 0,i = 0;
 	int B = dlugosc;
 	int D[dlugosc];
+
 	if (X > dlugosc || X < 0)
 		return -1;
+
 	printf("Tablica to: [");
+
 	for(i = 0; i < dlugosc; i++){
 		D[i] = wypelnienie(dlugosc, i); //wypelnienie tablicy D
+
         if (i != 0)
             printf(" %d", D[i]);
         else
             printf("%d", D[i]);
 	}
 	printf("]\n");
+
 	do{
             C = (A+B)/2;
+
 			if (X > D[C]){
 				B = C;
 			}
@@ -53,5 +59,4 @@ int wyszukaj(int dlugosc, int X)
 			}
 		}while(D[C]!= X);
 	return C;
-
 }
