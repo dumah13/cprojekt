@@ -40,22 +40,23 @@ int wyszukaj(int dlugosc, int X)
 
 	for(i = 0; i < dlugosc; i++){
 		D[i] = wypelnienie(dlugosc, i); //wypelnienie tablicy D
-
-        if (i != 0)
-            printf(" %d", D[i]);
-        else
-            printf("%d", D[i]);
+	}
+	if (i != 0)
+        	printf(" %d", D[i]);
+	else
+        	printf("%d", D[i]);
 	}
 	printf("]\n");
 
 	do{
+
         C = (A+B)/2;
 
         if (X > D[C])
-            B = C;
+        	B = C;
         else if (X < D[C])
-            A = C;
-    }while(D[C]!= X);
+		A = C;
+	}while(D[C]!= X);
 
 	return C;
 }
