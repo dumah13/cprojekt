@@ -12,7 +12,7 @@ int main(int argc, char* argv[]){
     printf("Podaj liczbe krazkow.\n");
     scanf("%d", &liczba_krazkow);
 
-    if (liczba_krazkow > 16){
+    if (liczba_krazkow > 15){
         printf("Za duza liczba krazkow! Wizualizacja nie zadziala i zapewne bedzie sie liczylo w nieskonczonosc. \n");
         return -1;
     }

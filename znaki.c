@@ -7,24 +7,27 @@ int main(int argc, char* argv[]){
 
     int znaki[dlg];
     int i;
-    int i2;
+    int i2 = 0;
 
     wypelnienie(znaki, dlg, 0);
 
-    printf("Podaj tekst z pliku, albo wpisz tutaj, po zakonczeniu wpisywania wcisnij CTRL+Z.\nBEZ POLSKICH ZNAKOW!\n");
+    printf("Podaj tekst z pliku, albo wpisz tutaj.\nBEZ POLSKICH ZNAKOW!\n");
 
-    while ((i = scanf("%c", &znak)) != EOF){
+    while ((i = scanf("%c", &znak)) != EOF /* && znak != '\n' */){
         (*(znaki + znak))++;
+
     }
+    printf("\n\nIlosc wystapien znakow:\n\n");
 
     for (i = 0; i < dlg; i++){
         if (znaki[i] == 0)
             continue;
         else {
             if (i == '\n')
-                printf("Ilosc znaku '\\n' = %d\t", znaki[i]);
+                //printf("'\\n' =  %d\t", znaki[i]);
+                continue;
             else
-                printf("Ilosc znaku '%c' = %d\t", i, znaki[i]);
+                printf("'%c'  =  %d\t", i, znaki[i]);
             for (i2 = 0; i2 < znaki[i]; i2++)
                 printf("|-");
         }
