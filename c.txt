@@ -1,0 +1,3 @@
+megabexd,citroen,czarny,56000,FZI123,nie,tak,tak,nie
+astra,opel,fioletowy,16000,FZa123,nie,nie,nie,tak
+multipla,fiat,czerwony,15000,ZUZIA1,tak,tak,tak,nie
