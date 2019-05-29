@@ -29,8 +29,7 @@ void usage(char * name);
 unsigned char* wczytajzplik(char argv[], int* dlugosc);
 int wczytajrekordy(unsigned char* bufor,rekord* baza ,int len, int nr);
 void zapisz(char nazwa[], rekord* baza, int ostatni);
-
-
+int wyswietlwszystkie(rekord* baza, int tryb, int ostatni);
 
 int main(int argc, char** argv){
 
@@ -38,6 +37,7 @@ int main(int argc, char** argv){
 
 	int i = 2;
 	int i2 = 2;
+	int i3 = 0;
 	int j;
 	int k;
 	int l;
@@ -49,7 +49,6 @@ int main(int argc, char** argv){
     int ostatni = 1;
     int pomin = 0;
     int blad = 0;
-    int tab[1000];
     int trybsortowania = 1;
     rekord pusty;
     char c;
@@ -61,13 +60,11 @@ int main(int argc, char** argv){
     char slowo2[] = "bazadanych.txt";
 
 	bufor = wczytajzplik(slowo2, &k);
-    if(bufor != NULL){
-
-
+    if(bufor != NULL){ //wczytanie domyslnej bazy danych
         ostatni = wczytajrekordy(bufor, baza, k, 1);
-
     }
-    while(!koncz){
+
+    while(!koncz){ //petla programu
         system("cls");
         if (start){
             printf("Wczytano plik %s\n", slowo2);
@@ -84,15 +81,16 @@ int main(int argc, char** argv){
             i2 = scanf("%d", &i);
             while((c = getchar()) != '\n' && c != EOF){}
         }
-        if (i == 7){
-            break;
+        if (i == 7){//wyjscie z programu
+            zapetlbool("Czy na pewno? (tak/nie lub y/n)\n", &j);
+            if (j == 1)
+                koncz = 1;
+            continue;
         }
         koniecpetli = 0;
         system("cls");
         while(!koniecpetli)
-            {
-            if (i == 1)
-                {
+            {if (i == 1){ //wyswietlanie rekordow
                 if (!pomin){
                     system("cls");
                     if (blad == 1){
@@ -103,46 +101,7 @@ int main(int argc, char** argv){
                         printf("Blad! Nalezy podac prawidlowa cyfre\n");
                         blad = 0;
                     }
-                    printf("Rekordy: \n");
-                    m = 0;
-                    if (ostatni == 0)
-                        printf("\nBrak rekordow w bazie danych.\n");
-                    else if (trybsortowania == 1){
-                       for (j = 1; j <= ostatni; j++){
-                            printf("%3d %15s %15s", baza[j-1].nr, baza[j-1].marka, baza[j-1].kolor);
-                            if (baza[j-1].kradzione)
-                                printf("  kradzione\n");
-                            else
-                                printf("\n");
-                        }
-                    }
-
-                    else if (trybsortowania == 2){
-                        m = 0;
-                        for (j = 1; j <= ostatni; j++){
-                            if (baza[j-1].kradzione){
-                                printf("%3d %15s %15s", baza[j-1].nr, baza[j-1].marka, baza[j-1].kolor);
-                                printf("  kradzione\n");
-                            }
-                            else{
-                                tab[m] = j-1;
-                                m++;
-                            }
-                        }
-                        for (j = 0; j < m; j++){
-
-                            printf("%3d %15s %15s\n", baza[tab[j]].nr, baza[tab[j]].marka, baza[tab[j]].kolor);
-                        }
-                    }
-                    else if (trybsortowania == 3){
-                       for (j = 1; j <= ostatni; j++){
-                            printf("%d %15s %15s", baza[j-1].nr, baza[j-1].marka, baza[j-1].kolor);
-                            if (baza[j-1].kradzione)
-                                printf("  kradzione\n");
-                            else
-                                printf("\n");
-                        }
-                    }
+                    wyswietlwszystkie(baza, trybsortowania, ostatni);
                     printf("Wpisz '1' aby wybrac nr rekordu do wyswietlenia\n");
                     printf("Wpisz '2' aby dodac rekord\n");
                     printf("Wpisz '3' aby usunac rekordy\n");
@@ -150,9 +109,10 @@ int main(int argc, char** argv){
                     printf("Wpisz '5' aby sortowac skradzione\n");
                     printf("Wpisz '6' aby sortowac markami\n");
                     printf("Wpisz '7' aby sortowac kolorem\n");
+                    printf("Wpisz '8' aby sortowac wartoscia (aby sortowac malejaco, wpisz '8' po raz drugi)\n");
                     printf("Wpisz 'F' aby sortowac domyslnie\n");
                     c = getchar();
-                    printf("\n%c\n", c);
+
                     while((d = getchar()) != '\n' && d != EOF){}
                     if (c == '1')
                         {
@@ -176,6 +136,25 @@ int main(int argc, char** argv){
                     }
                     else if (c == 'F'){
                         trybsortowania = 1;
+                        continue;
+                    }
+                    else if (c == '6'){
+                        trybsortowania = 3;
+                        continue;
+                    }
+                    else if (c == '7'){
+                        trybsortowania = 4;
+                        continue;
+                    }
+                    else if (c == '8'){
+                        if (i3){
+                            trybsortowania = 6;
+                            i3 = 0;
+                        }
+                        else {
+                            i3 = 1;
+                            trybsortowania = 5;
+                        }
                         continue;
                     }
                     else{
@@ -221,7 +200,7 @@ int main(int argc, char** argv){
                     break;
                 }
             }
-            else if (i == 2){
+            else if (i == 2){ //dodawanie rekordow
                 system("cls");
                 if (ostatni == 999){
                     printf("Nie mozna dodac rekordu, przekroczono maksymalna ilosc rekordow.");
@@ -258,7 +237,7 @@ int main(int argc, char** argv){
                     break;
                 }
             }
-            else if (i == 3){
+            else if (i == 3){ //usuwanie rekordow
                 i2 = 0;
                 //system("cls");
                 while (i2 != 2){
@@ -329,7 +308,7 @@ int main(int argc, char** argv){
 
                 }
             }
-            else if (i == 4){
+            else if (i == 4){ //wczytywanie z pliku
                 printf("Wcisnij '1' aby wrocic do menu\n");
                 printf("Wcisnij '2' aby podac nazwe pliku\n");
                 i2 = 0;
@@ -364,7 +343,7 @@ int main(int argc, char** argv){
                     continue;
                 }
             }
-            else if (i == 5){
+            else if (i == 5){ //dodawanie z pliku
                 printf("Wcisnij '1' aby wrocic do menu\n");
                 printf("Wcisnij '2' aby podac nazwe pliku\n");
                 i2 = 0;
@@ -401,7 +380,7 @@ int main(int argc, char** argv){
 
 
             }
-            else if (i == 6){
+            else if (i == 6){ //zapis do pliku
                 char slowo2[] = "bazadanych.txt";
                 j = wczytajkonsola("Podaj nazwe pliku do jakiego baza ma zostac zapisana (np a.txt)\nbadz nie wpisuj nic i baza zostanie zapisana do domyslnego pliku\nZatwierdz wicskajac klawisz Enter\n", slowo2);
                 if(j == -1){
@@ -416,8 +395,10 @@ int main(int argc, char** argv){
                     printf("Zapisano do pliku %s\n", slowo2);
                 }
                 }
-            else
+            else{
+                koniecpetli = 1;
                 break;
+            }
         }
     }
     system("cls");
@@ -447,11 +428,13 @@ int dodajrekord(rekord* baza, int numer){
 	//char bufor[100];
 
 	nowauto.nr = numer + 1;
+
     system("cls");
     while (j != 1){
         j = wczytajkonsola("Model samochodu:\n", nowauto.nazwa);
         if (j == -1){
-            printf("Blad! Przepelnienie bufora.");
+            //printf("Blad! Przepelnienie bufora.");
+            while((c = getchar()) != '\n' && c != EOF){}
             continue;
         }
         else if (j == 0){
@@ -464,7 +447,8 @@ int dodajrekord(rekord* baza, int numer){
     while (j != 1){
         j = wczytajkonsola("Marka samochodu:\n", nowauto.marka);
         if (j == -1){
-            printf("Blad! Przepelnienie bufora.");
+            //printf("Blad! Przepelnienie bufora.");
+            while((c = getchar()) != '\n' && c != EOF){}
             continue;
         }
         else if (j == 0){
@@ -477,7 +461,8 @@ int dodajrekord(rekord* baza, int numer){
     while (j != 1){
         j = wczytajkonsola("Kolor samochodu:\n", nowauto.kolor);
         if (j == -1){
-            printf("Blad! Przepelnienie bufora.");
+            //printf("Blad! Przepelnienie bufora.");
+            while((c = getchar()) != '\n' && c != EOF){}
             continue;
         }
         else if (j == 0){
@@ -490,7 +475,7 @@ int dodajrekord(rekord* baza, int numer){
     while (j != 1){
         j = wczytajkonsola("Numer rejestracyjny samochodu:\n", nowauto.nrrej);
         if (j == -1){
-            printf("Blad! Przepelnienie bufora.");
+            //printf("Blad! Przepelnienie bufora.");
             while((c = getchar()) != '\n' && c != EOF){}
             continue;
         }
@@ -539,8 +524,11 @@ int wczytajkonsola(char tekst[], char* miejsce){
 	while((c = getchar()) != '\n' && c != EOF){
         if (c == ',')
             return 0;
-        else if (j == 100)
+        else if (j >= 99){
+            system("cls");
+            printf("Blad! Przepelnienie bufora\n");
             return -1;
+        }
         miejsce[j] = c;
         j++;
 	}
@@ -731,4 +719,213 @@ void zapisz(char nazwa[], rekord* baza, int ostatni){
         fprintf(plik, "\n");
     }
     fclose(plik);
+}
+int wyswietlwszystkie(rekord* baza, int tryb, int ostatni){
+
+int i = 0;
+int m = 0;
+int j = 0;
+int k = 0;
+int l = 1;
+int i2 = 0;
+int malejaco = 0;
+int nr;
+int tab[ostatni];
+
+printf("Rekordy: \n");
+
+if (ostatni == 0){
+    printf("\nBrak rekordow w bazie danych.\n");
+    return 0;
+}
+else
+    printf("   NR                MARKA                KOLOR                    WARTOSC\n\n");
+if (tryb == 6){
+    tryb = 5;
+    malejaco = 1;
+
+}
+if (tryb == 1){
+    for (j = 1; j <= ostatni; j++){
+        printf("%5d %20s %20s", baza[j-1].nr, baza[j-1].marka, baza[j-1].kolor);
+        if (baza[j-1].kradzione)
+            printf("     skradzione     ");
+        else
+            printf("                    ");
+        printf("%.2f PLN\n", baza[j-1].cena);
+        }
+}
+
+else if (tryb == 2){
+    for (j = 1; j <= ostatni; j++){
+        if (baza[j-1].kradzione){
+            printf("%5d %20s %20s", baza[j-1].nr, baza[j-1].marka, baza[j-1].kolor);
+                printf("     skradzione     ");
+                printf("%.2f PLN\n", baza[j-1].cena);
+        }
+        else{
+            tab[m] = j-1;
+            m++;
+        }
+
+    }
+    for (j = 0; j < m; j++){
+        printf("%5d %20s %20s", baza[tab[j]].nr, baza[tab[j]].marka, baza[tab[j]].kolor);
+        printf("                    ");
+        printf("%.2f PLN\n", baza[tab[j]].cena);
+    }
+
+}
+
+else if (tryb == 3){
+    k = 0;
+    for (j = 1; j <= ostatni; j++){
+        if (j == 1){
+            tab[0] = 1;
+        }
+        m = 0;
+        while (m < k){
+            if (strlen(baza[j-1].marka) > strlen(baza[tab[m] - 1].marka)){
+                l = strlen(baza[tab[m] - 1].marka);
+                i2 = 1;
+            }
+            else{
+                l = strlen(baza[j-1].marka);
+                i2 = 0;
+            }
+            i = strncmp(baza[j-1].marka, baza[tab[m] - 1].marka, l);
+            //printf("\n\n i = %d, l = %d, k = %d, m = %d, tab = %s, nowe = %s\n\n", i, l, k, m, baza[tab[m] - 1].marka, baza[j-1].marka);
+            if (i > 0){
+
+                if (m+1 == k){
+                    tab[k] = j;
+                    //printf("\ntab[k]= %s\n", baza[tab[k] - 1].marka);
+                }
+                m++;
+            }else if (i == 0 && i2){
+
+                if (m+1 == k){
+                    tab[k] = j;
+                }
+                m++;
+            }else{
+                nr = j;
+                for(m = m; m <= k; m++){
+                    i = tab[m];
+                    tab[m] = nr;
+                    //printf("\ntab[m]= %s, m = %d\n", baza[tab[m] - 1].marka, m);
+                    nr = i;
+                }
+            }
+        }
+        k++;
+    }
+    for (j = 0; j < ostatni; j++){
+        //printf("\n\n tab[j] = %d, j = %d", tab[j], j);
+        printf("%5d %20s %20s", baza[tab[j] - 1].nr, baza[tab[j] - 1].marka, baza[tab[j] -1].kolor);
+        if (baza[tab[j] - 1].kradzione)
+            printf("     skradzione     ");
+        else
+            printf("                    ");
+        printf("%.2f PLN\n", baza[tab[j] - 1].cena);
+    }
+
+}
+else if (tryb == 4){
+    k = 0;
+    for (j = 1; j <= ostatni; j++){
+        if (j == 1){
+            tab[0] = 1;
+        }
+        m = 0;
+        while (m < k){
+            if (strlen(baza[j-1].kolor) > strlen(baza[tab[m] - 1].kolor)){
+                l = strlen(baza[tab[m] - 1].kolor);
+                i2 = 1;
+            }
+            else{
+                l = strlen(baza[j-1].kolor);
+                i2 = 0;
+            }
+            i = strncmp(baza[j-1].kolor, baza[tab[m] - 1].kolor, l);
+            //printf("\n\n i = %d, l = %d, k = %d, m = %d, tab = %s, nowe = %s\n\n", i, l, k, m, baza[tab[m] - 1].kolor, baza[j-1].kolor);
+            if (i > 0){
+
+                if (m+1 == k){
+                    tab[k] = j;
+                    //printf("\ntab[k]= %s\n", baza[tab[k] - 1].kolor);
+                }
+                m++;
+            }else if (i == 0 && i2){
+
+                if (m+1 == k){
+                    tab[k] = j;
+                }
+                m++;
+            }else{
+                nr = j;
+                for(m = m; m <= k; m++){
+                    i = tab[m];
+                    tab[m] = nr;
+                    //printf("\ntab[m]= %s, m = %d\n", baza[tab[m] - 1].kolor, m);
+                    nr = i;
+                }
+            }
+        }
+        k++;
+    }
+    for (j = 0; j < ostatni; j++){
+        //printf("\n\n tab[j] = %d, j = %d", tab[j], j);
+        printf("%5d %20s %20s", baza[tab[j] - 1].nr, baza[tab[j] - 1].marka, baza[tab[j] -1].kolor);
+        if (baza[tab[j] - 1].kradzione)
+            printf("     skradzione     ");
+        else
+            printf("                    ");
+        printf("%.2f PLN\n", baza[tab[j] - 1].cena);
+    }
+
+}
+else if (tryb == 5){
+    k = 0;
+    for (j = 1; j <= ostatni; j++){
+        if (j == 1){
+            tab[0] = 1;
+        }
+        m = 0;
+        while (m < k){
+            i = baza[j-1].cena - baza[tab[m] - 1].cena;
+            if (malejaco){
+                i *= -1;
+            }
+            if (i <= 0){
+                if (m+1 == k){
+                    tab[k] = j;
+                    //printf("\ntab[k]= %s\n", baza[tab[k] - 1].kolor);
+                }
+                m++;
+            }else{
+                nr = j;
+                for(m = m; m <= k; m++){
+                    i = tab[m];
+                    tab[m] = nr;
+                    //printf("\ntab[m]= %s, m = %d\n", baza[tab[m] - 1].kolor, m);
+                    nr = i;
+                }
+            }
+        }
+        k++;
+    }
+    for (j = 0; j < ostatni; j++){
+        //printf("\n\n tab[j] = %d, j = %d", tab[j], j);
+        printf("%5d %20s %20s", baza[tab[j] - 1].nr, baza[tab[j] - 1].marka, baza[tab[j] -1].kolor);
+        if (baza[tab[j] - 1].kradzione)
+            printf("     skradzione     ");
+        else
+            printf("                    ");
+        printf("%.2f PLN\n", baza[tab[j] - 1].cena);
+    }
+
+}
+printf("\n");
+return -1;
 }
