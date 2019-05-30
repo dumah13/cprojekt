@@ -1,8 +1,9 @@
-megabexd,citroen,czarny,56000.00,FZI123,tak,nie,tak,nie
-astra,opel,fioletowy,16000.00,FZa123,nie,nie,nie,tak
-multipla,fiat,czerwony,15000.00,ZUZIA1,tak,tak,tak,nie
-megabexd,citroen,czarny,56000.00,FZI123,nie,tak,tak,nie
-multipla,fiat,czerwony,15000.00,ZUZIA1,tak,tak,tak,nie
-dsad,sdasd,sdfds,4566.00,4frge,nie,nie,nie,tak
-asdasd,dsadads,asdasd,4554.00,dsdad,nie,nie,nie,nie
-golf,wie˜wagen,granatowy,2.00,FZI123531,nie,nie,nie,tak
+MEGABEXD; CITROEN; CZARNY; 56000.00; FZI123; nie; tak; tak; nie
+ASTRA; OPEL; FIOLETOWY; 16000.00; FZA123; nie; nie; nie; tak
+MULTIPLA; FIAT; CZERWONY; 15000.00; ZUZIA1; tak; tak; tak; nie
+MEGABEXD; CITROEN; CZARNY; 56000.00; FZI123; tak; nie; tak; nie
+MULTIPLA; FIAT; CZERWONY; 15000.00; ZUZIA1; tak; tak; tak; nie
+DSAD; SDASD; SDFDS; 4566.00; 4FRGE; nie; nie; nie; tak
+ASDASD; DSADADS; ASDASD; 4554.00; DSDAD; nie; nie; nie; nie
+GOLF; WIE˜WAGEN; GRANATOWY; 2.00; FZI123531; nie; nie; nie; tak
+GOLf; VOLkswagen; SREbrny; 11000.00; FZ98233; nie; tak; tak; nie
