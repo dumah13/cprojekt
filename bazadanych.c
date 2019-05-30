@@ -34,7 +34,7 @@ int wyszukaj(rekord* baza, int ostatni);
 
 int main(int argc, char** argv){
 
-	rekord baza[1000];
+	rekord* baza = malloc(sizeof(rekord*));
 
 	int i = 2;
 	int i2 = 2;
@@ -662,6 +662,9 @@ int wczytajrekordy(unsigned char* bufor,rekord* baza ,int len, int nr){
     int i = 0;
     int j = 0;
     int k = 0;
+    //rekord* nowy = baza + nr;
+    //&//baza[nr] = malloc(sizeof(rekord*));
+    realloc(baza ,sizeof(rekord) * nr);
 
     for(m = 0; m < len; m++){
         c = bufor[m];
@@ -671,6 +674,7 @@ int wczytajrekordy(unsigned char* bufor,rekord* baza ,int len, int nr){
         if (c == '\n'){
             slowo[j] = '\0';
             baza[nr-1].nr = nr;
+            realloc(baza ,sizeof(rekord) * nr);
             printf("%s", slowo);
             baza[nr-1].kradzione =  strdoint(slowo);
             nr++;
