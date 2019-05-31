@@ -27,14 +27,19 @@ int usunrekord(rekord* baza, int nrpocz, int nrkonc);
 int wczytajkonsola(char tekst[], char* miejsce);
 void usage(char * name);
 unsigned char* wczytajzplik(char argv[], int* dlugosc);
-int wczytajrekordy(unsigned char* bufor,rekord* baza ,int len, int nr);
+int wczytajrekordy(unsigned char* bufor,rekord** tablica ,int len, int nr);
 void zapisz(char nazwa[], rekord* baza, int ostatni);
 int wyswietlwszystkie(rekord* baza, int tryb, int ostatni);
 int wyszukaj(rekord* baza, int ostatni);
 
 int main(int argc, char** argv){
 
-	rekord* baza = malloc(sizeof(rekord*));
+	rekord* baza = malloc(sizeof(rekord));
+
+	if (!baza) {
+        printf("Nie mozna przydzielic pamieci. Koncze prace...");
+        return 2;
+	}
 
 	int i = 2;
 	int i2 = 2;
@@ -47,7 +52,7 @@ int main(int argc, char** argv){
     int koncz = 0;
     int nr;
     int koniecpetli = 0;
-    int ostatni = 1;
+    int ostatni = 0;
     int pomin = 0;
     int blad = 0;
     int trybsortowania = 1;
@@ -57,20 +62,25 @@ int main(int argc, char** argv){
     char slowo[100];
     int start = 1;
     unsigned char* bufor;
+    rekord **ptr = &baza;
     int pomin2 = 0;
 
     char slowo2[] = "bazadanych.txt";
 
 	bufor = wczytajzplik(slowo2, &k);
     if(bufor != NULL){ //wczytanie domyslnej bazy danych
-        ostatni = wczytajrekordy(bufor, baza, k, 1);
+        ostatni = wczytajrekordy(bufor, ptr, k, 1);
     }
-
     while(!koncz){ //petla programu
         system("cls");
-        if (start){
+        if (ostatni == -1){
+            printf("Nie powiodlo sie przydzielanie pamieci");
+            start = 0;
+        }
+        else if (start){
             printf("Wczytano plik %s\n", slowo2);
             printf("Ilosc wczytanych rekordow: %d\n", ostatni);
+            //printf("\n%d %d\n", sizeof(baza), sizeof(rekord));
             start = 0;
         }
         printf("Witaj w bazie samochodow efbijaj!\nWybierz funkcje, wpisujac cyfre i zatwierdzajac klawiszem Enter.\n");
@@ -85,8 +95,10 @@ int main(int argc, char** argv){
         }
         if (i == 7){//wyjscie z programu
             zapetlbool("Czy na pewno? (tak/nie lub y/n)\n", &j);
-            if (j == 1)
+            if (j == 1){
                 koncz = 1;
+                free(baza);
+            }
             continue;
         }
         koniecpetli = 0;
@@ -219,13 +231,8 @@ int main(int argc, char** argv){
             }
             else if (i == 2){ //dodawanie rekordow
                 system("cls");
-                if (ostatni == 999){
-                    printf("Nie mozna dodac rekordu, przekroczono maksymalna ilosc rekordow.");
-                    printf("\nWpisz dowolny znak aby powrocic do menu\n");
-                    getchar();
-                    while((c = getchar()) != '\n' && c != EOF){}
-                    break;
-                }
+                baza = realloc(baza, (ostatni+1)*sizeof(rekord));
+                ptr = &baza;
                 j = dodajrekord(baza, ostatni);
                 if (!j)
                     break;
@@ -350,7 +357,7 @@ int main(int argc, char** argv){
                     else{
                         printf("Wczytano plik %s\n", slowo);
                         stareostatnie = ostatni;
-                        ostatni = wczytajrekordy(bufor, baza, k, ostatni+1);
+                        ostatni = wczytajrekordy(bufor, ptr, k, ostatni+1);
                         printf("Ilosc dodanych rekordow: %d\n", ostatni-stareostatnie);
                         }
                     }
@@ -385,7 +392,7 @@ int main(int argc, char** argv){
                     else{
                         printf("Wczytano plik %s\n", slowo);
 
-                        ostatni = wczytajrekordy(bufor, baza, k, 1);
+                        ostatni = wczytajrekordy(bufor, ptr, k, 1);
                         printf("Ilosc wczytanych rekordow: %d\n", ostatni);
                         }
                     }
@@ -654,7 +661,7 @@ unsigned char* wczytajzplik(char argv[], int* dlugosc){
     fclose(plik);
     return bufor;
 }
-int wczytajrekordy(unsigned char* bufor,rekord* baza ,int len, int nr){
+int wczytajrekordy(unsigned char* bufor, rekord** tablica ,int len, int nr){
 
     char c;
     char slowo[100];
@@ -664,7 +671,14 @@ int wczytajrekordy(unsigned char* bufor,rekord* baza ,int len, int nr){
     int k = 0;
     //rekord* nowy = baza + nr;
     //&//baza[nr] = malloc(sizeof(rekord*));
-    realloc(baza ,sizeof(rekord) * nr);
+
+    rekord* baza = realloc(*tablica, (nr+1)*sizeof(rekord));
+    *tablica = baza;
+    if (!baza)
+    {
+        free(baza);
+        return -1;
+    }
 
     for(m = 0; m < len; m++){
         c = bufor[m];
@@ -674,10 +688,11 @@ int wczytajrekordy(unsigned char* bufor,rekord* baza ,int len, int nr){
         if (c == '\n'){
             slowo[j] = '\0';
             baza[nr-1].nr = nr;
-            realloc(baza ,sizeof(rekord) * nr);
             printf("%s", slowo);
             baza[nr-1].kradzione =  strdoint(slowo);
             nr++;
+            baza = realloc(*tablica, (nr+1)*sizeof(rekord));
+            *tablica = baza;
             i = 0;
             j = 0;
         }
