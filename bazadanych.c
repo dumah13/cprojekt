@@ -301,6 +301,7 @@ int main(int argc, char** argv){
                     if (l){
                         stareostatnie = ostatni;
                         ostatni -= (k-j + 1);
+                        realloc(baza, (ostatni+1)*sizeof(rekord));
                         for(m = k + 1; m <= stareostatnie; m++){
                             baza[m - 1].nr -= (k-j + 1);
                             baza[m - 1 - (k-j + 1)] = baza[m - 1];
